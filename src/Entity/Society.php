@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\SocietyRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\SocietyRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: SocietyRepository::class)]
 class Society implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -22,6 +24,13 @@ class Society implements UserInterface, PasswordAuthenticatedUserInterface {
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\OneToMany(mappedBy: 'society', targetEntity: User::class, orphanRemoval: true)]
+    private $users;
+
+    public function __construct() {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int {
         return $this->id;
@@ -99,5 +108,32 @@ class Society implements UserInterface, PasswordAuthenticatedUserInterface {
     public function eraseCredentials() {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setSociety($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getSociety() === $this) {
+                $user->setSociety(null);
+            }
+        }
+
+        return $this;
     }
 }
