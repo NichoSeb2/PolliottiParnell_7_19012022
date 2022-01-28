@@ -19,7 +19,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         for ($i = 1; $i <= 5; $i++) { 
             $user = new User();
             $user
-                ->setName("User ". $i)
+                ->setFirstName("FirstName ". $i)
+                ->setLastName("LastName ". $i)
+                ->setEmail("firstname.lastname@gmail.com")
                 ->setSociety($this->getReference(SocietyFixtures::SOCIETY_ZERO_REFERENCE))
             ;
             $manager->persist($user);
