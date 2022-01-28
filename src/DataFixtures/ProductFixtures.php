@@ -12,6 +12,8 @@ class ProductFixtures extends Fixture {
             $product = new Product();
             $product
                 ->setName("Product ". $i)
+                ->setDescription("An awesome product")
+                ->setColor(array_rand(["Red", "Blue", "Pink", "Gold", "Silver", "White", "Black"]))
                 ->setPrice(rand(99, 999) + (rand(0, 99)) / 100)
             ;
             $manager->persist($product);

@@ -13,7 +13,13 @@ class User {
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private $firstName;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $lastName;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $email;
 
     #[ORM\ManyToOne(targetEntity: Society::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
@@ -23,12 +29,32 @@ class User {
         return $this->id;
     }
 
-    public function getName(): ?string {
-        return $this->name;
+    public function getFirstName(): ?string {
+        return $this->firstName;
     }
 
-    public function setName(string $name): self {
-        $this->name = $name;
+    public function setFirstName(string $firstName): self {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self {
+        $this->email = $email;
 
         return $this;
     }
