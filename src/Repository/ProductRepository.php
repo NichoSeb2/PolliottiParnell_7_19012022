@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use AbstractRepository;
 use App\Entity\Product;
+use Pagerfanta\Pagerfanta;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,9 +13,19 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  * @method Product[]    findAll()
  * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductRepository extends ServiceEntityRepository {
+class ProductRepository extends AbstractRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Product::class);
+    }
+
+    public function search(string $order = 'asc', int $page = 1, int $limit = 10): Pagerfanta {
+        $qb = $this
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->orderBy('p.id', $order)
+        ;
+
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**
