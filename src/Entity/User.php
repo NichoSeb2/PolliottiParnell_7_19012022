@@ -11,23 +11,24 @@ class User {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups("user")]
+    #[Groups(["user", "user_detail"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups("user")]
+    #[Groups(["user", "user_detail"])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups("user")]
+    #[Groups(["user", "user_detail"])]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups("user")]
+    #[Groups(["user", "user_detail"])]
     private $email;
 
     #[ORM\ManyToOne(targetEntity: Society::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["user_detail"])]
     private $society;
 
     public function getId(): ?int {
