@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Society;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,5 +25,23 @@ class UserController extends AbstractController {
             'code' => 200, 
             'data' => $userRepository->search($society, "asc", $page, self::USER_PER_PAGE)
         ], 200, [], ['groups' => "user"]);
+    }
+
+    #[Route('/api/users/{id}', name: 'app_user', methods: ['GET'], format: 'json')]
+    public function user(User $user, Request $request): Response {
+        /** @var Society $society */
+        $society = $this->getUser();
+
+        if ($user->getSociety()->getId() != $society->getId()) {
+            return $this->json([
+                'code' => "403", 
+                'message' => "You are not allowed to view this user"
+            ], 403);
+        }
+
+        return $this->json([
+            'code' => 200, 
+            'data' => $user
+        ], 200, [], ['groups' => "user_detail"]);
     }
 }
