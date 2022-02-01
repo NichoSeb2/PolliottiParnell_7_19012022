@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use AbstractRepository;
 use App\Entity\Society;
 use Pagerfanta\Pagerfanta;
+use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

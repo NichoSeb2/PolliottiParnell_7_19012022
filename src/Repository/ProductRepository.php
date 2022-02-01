@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use AbstractRepository;
 use App\Entity\Product;
 use Pagerfanta\Pagerfanta;
+use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

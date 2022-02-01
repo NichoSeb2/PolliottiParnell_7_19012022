@@ -5,8 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: "email")]
 class User {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,19 +19,33 @@ class User {
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user", "user_detail"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255,
+    )]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user", "user_detail"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255,
+    )]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user", "user_detail"])]
+    #[Assert\NotBlank]
+    #[Assert\Email()]
+    #[Assert\Length(
+        max: 255,
+    )]
     private $email;
 
     #[ORM\ManyToOne(targetEntity: Society::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(["user_detail"])]
+    #[Assert\NotBlank]
     private $society;
 
     public function getId(): ?int {
