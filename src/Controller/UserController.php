@@ -44,7 +44,7 @@ class UserController extends AbstractController {
         if ($user->getSociety()->getId() != $society->getId()) {
             return $this->json([
                 'code' => "403", 
-                'message' => "You are not allowed to view this user"
+                'message' => "You are not allowed to view this user."
             ], 403);
         }
 
@@ -80,5 +80,29 @@ class UserController extends AbstractController {
             'code' => 201, 
             'data' => $user
         ], 201, [], ['groups' => "user_detail"]);
+    }
+
+    #[Route('/api/users/{id}', name: 'app_user_delete', methods: ['DELETE'], format: 'json')]
+    public function userDelete(?User $user, EntityManagerInterface $entityManager): Response {
+        if (is_null($user)) {
+            throw new NotFoundHttpException("No user found for the provided id.");
+        }
+
+        /** @var Society $society */
+        $society = $this->getUser();
+
+        if ($user->getSociety()->getId() != $society->getId()) {
+            return $this->json([
+                'code' => "403", 
+                'message' => "You are not allowed to delete this user."
+            ], 403);
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->json([
+            'code' => 200, 
+        ], 200);
     }
 }
