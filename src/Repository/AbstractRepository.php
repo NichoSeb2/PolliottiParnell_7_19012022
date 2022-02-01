@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Repository;
+
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
