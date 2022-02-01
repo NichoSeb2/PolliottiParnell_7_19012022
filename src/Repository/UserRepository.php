@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use AbstractRepository;
+use App\Entity\Society;
+use Pagerfanta\Pagerfanta;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,9 +14,21 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository {
+class UserRepository extends AbstractRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, User::class);
+    }
+
+    public function search(Society $society, string $order = 'asc', int $page = 1, int $limit = 10): Pagerfanta {
+        $qb = $this
+            ->createQueryBuilder('u')
+            ->where('u.society = :val')
+            ->setParameter('val', $society)
+            ->select('u')
+            ->orderBy('u.id', $order)
+        ;
+
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**

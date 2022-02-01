@@ -16,14 +16,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
     }
 
     public function load(ObjectManager $manager): void {
-        for ($i = 1; $i <= 5; $i++) { 
+        for ($i = 1; $i <= 20; $i++) { 
             $user = new User();
             $user
                 ->setFirstName("FirstName ". $i)
                 ->setLastName("LastName ". $i)
                 ->setEmail("firstname.lastname@gmail.com")
-                ->setSociety($this->getReference(SocietyFixtures::SOCIETY_ZERO_REFERENCE))
             ;
+
+            if ($i % 2 == 0) {
+                $user->setSociety($this->getReference(SocietyFixtures::SOCIETY_ONE_REFERENCE));
+            } else {
+                $user->setSociety($this->getReference(SocietyFixtures::SOCIETY_TWO_REFERENCE));
+            }
+
             $manager->persist($user);
             $manager->flush();
         }
