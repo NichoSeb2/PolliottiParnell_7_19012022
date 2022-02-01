@@ -19,7 +19,7 @@ class ProductController extends AbstractController {
 
         return $this->json([
             'code' => 200, 
-            'data' => $productRepository->search('asc', $page, self::PRODUCT_PER_PAGE)
+            'data' => $productRepository->search("asc", $page, self::PRODUCT_PER_PAGE)
         ], 200);
     }
 
