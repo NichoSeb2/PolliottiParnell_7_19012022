@@ -4,9 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Society;
+use OpenApi\Attributes\Tag;
+use OpenApi\Annotations as OA;
 use App\Repository\UserRepository;
 use App\Service\ValidatorErrorFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +19,28 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[Tag(name: "Users")]
+#[Security(name: "Bearer")]
 class UserController extends AbstractController {
     private const USER_PER_PAGE = 5;
 
     #[Route('/api/users', name: 'app_users_get', methods: ['GET'], format: 'json')]
+    /**
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="The current page",
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns a paginated list of users",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=User::class, groups={"user"}))
+     *     )
+     * )
+     */
     public function usersGet(Request $request, UserRepository $userRepository): Response {
         /** @var Society $society */
         $society = $this->getUser();
@@ -33,6 +55,30 @@ class UserController extends AbstractController {
     }
 
     #[Route('/api/users/{id}', name: 'app_user_get', methods: ['GET'], format: 'json')]
+    /**
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="The user id",
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns the details of an user",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=User::class, groups={"user"}))
+     *     )
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="You are not allowed to view this user.",
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No user found for the provided id.",
+     * )
+     */
     public function userGet(?User $user): Response {
         if (is_null($user)) {
             throw new NotFoundHttpException("No user found for the provided id.");
