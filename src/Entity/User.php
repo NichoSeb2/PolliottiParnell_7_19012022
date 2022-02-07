@@ -14,11 +14,11 @@ class User {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user", "user_detail"])]
+    #[Groups(["full", "user"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user", "user_detail"])]
+    #[Groups(["full", "user"])]
     #[Assert\NotBlank]
     #[Assert\Length(
         max: 255,
@@ -26,7 +26,7 @@ class User {
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user", "user_detail"])]
+    #[Groups(["full", "user"])]
     #[Assert\NotBlank]
     #[Assert\Length(
         max: 255,
@@ -34,7 +34,7 @@ class User {
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user", "user_detail"])]
+    #[Groups(["full", "user"])]
     #[Assert\NotBlank]
     #[Assert\Email()]
     #[Assert\Length(
@@ -44,7 +44,7 @@ class User {
 
     #[ORM\ManyToOne(targetEntity: Society::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["user_detail"])]
+    #[Groups(["full", "user"])]
     #[Assert\NotBlank]
     private $society;
 

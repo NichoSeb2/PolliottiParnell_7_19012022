@@ -20,7 +20,7 @@ class Society implements UserInterface, PasswordAuthenticatedUserInterface {
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user_detail"])]
+    #[Groups(["full", "user"])]
     private $name;
 
     #[ORM\Column(type: 'json')]

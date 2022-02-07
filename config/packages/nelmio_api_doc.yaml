@@ -12,7 +12,35 @@ nelmio_api_doc:
                     bearerFormat: JWT
         security:
             - Bearer: []
+        paths:
+            /api/auth/login:
+                post:
+                    tags: [Login]
+                    summary: Authenticate and receive a token
+                    requestBody:
+                        description: User credentials
+                        content:
+                            application/json:
+                                schema:
+                                    required:
+                                        - userName
+                                    properties:
+                                        username:
+                                            type: string
+                                        password:
+                                            type: string
+                    responses:
+                        200:
+                            description: "Returns the auth token"
+                            content:
+                                application/json:
+                                    schema:
+                                        properties:
+                                            token:
+                                                type: string
+                        401:
+                            description: "Invalid credentials"
     areas: # to filter documented areas
-        disable_default_routes: true
+        # disable_default_routes: true
         path_patterns:
             - ^/api(?!/docs$) # Accepts routes under /api except /api/docs

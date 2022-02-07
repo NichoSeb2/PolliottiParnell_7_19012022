@@ -13,23 +13,23 @@ class Product {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["product"])]
+    #[Groups(["full", "product"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["product"])]
+    #[Groups(["full", "product"])]
     private $name;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(["product"])]
+    #[Groups(["full", "product"])]
     private $price;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(["product"])]
+    #[Groups(["full", "product"])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["product"])]
+    #[Groups(["full", "product"])]
     private $color;
 
     public function getId(): ?int {
