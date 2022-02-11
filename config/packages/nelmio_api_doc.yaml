@@ -1,46 +1,440 @@
 nelmio_api_doc:
-    documentation:
-        info:
-            title: BileMo's API
-            # description: This is an awesome app!
-            version: 1.0.0
-        components:
-            securitySchemes:
-                Bearer:
-                    type: http
-                    scheme: bearer
-                    bearerFormat: JWT
-        security:
-            - Bearer: []
-        paths:
-            /api/auth/login:
-                post:
-                    tags: [Login]
-                    summary: Authenticate and receive a token
-                    requestBody:
-                        description: User credentials
-                        content:
-                            application/json:
-                                schema:
-                                    required:
-                                        - userName
-                                    properties:
-                                        username:
-                                            type: string
-                                        password:
-                                            type: string
-                    responses:
-                        200:
-                            description: "Returns the auth token"
-                            content:
-                                application/json:
-                                    schema:
-                                        properties:
-                                            token:
-                                                type: string
-                        401:
-                            description: "Invalid credentials"
-    areas: # to filter documented areas
-        # disable_default_routes: true
-        path_patterns:
-            - ^/api(?!/docs$) # Accepts routes under /api except /api/docs
+  documentation:
+    info:
+      title: "BileMo's API"
+      # description: This is an awesome app!
+      version: 1.0.0
+
+    components:
+      securitySchemes:
+        Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+
+      schemas:
+        Product:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 20
+            name:
+              type: string
+              example: "An awesome product"
+            price:
+              type: integer
+              format: float
+              example: 299.99
+            description:
+              type: string
+              example: "The description of the awesome product"
+            color:
+              type: string
+              example: "White"
+        User:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 10
+            firstName:
+              type: string
+              example: "John"
+            lastName:
+              type: string
+              example: "Doe"
+            email:
+              type: string
+              example: "john.doe@example.com"
+            society:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "BileMo"
+        JWTTokenMissing:
+          type: object
+          properties:
+            code:
+              type: integer
+              const: 401
+            message:
+              type: string
+              const: "JWT Token not found"
+        JWTTokenExpired:
+          type: object
+          properties:
+            code:
+              type: integer
+              const: 401
+            message:
+              type: string
+              const: "JWT Token Expired"
+        JWTTokenInvalid:
+          type: object
+          properties:
+            code:
+              type: integer
+              const: 401
+            message:
+              type: string
+              const: "Invalid JWT Token"
+
+      parameters:
+        PageNumber:
+          name: page
+          in: query
+          description: "The current page"
+          required: false
+          schema:
+            type: integer
+            default: 1
+            example: 1
+        ProductId:
+          name: id
+          in: path
+          description: "The product id"
+          required: true
+          schema:
+            type: integer
+            example: 1
+        UserId:
+          name: id
+          in: path
+          description: "The user id"
+          required: true
+          schema:
+            type: integer
+            example: 1
+
+      requestBodies:
+        UserCredentials:
+          description: "User credentials"
+          content:
+            application/json:
+              schema:
+                required:
+                  - userName
+                properties:
+                  username:
+                    type: string
+                    example: "John Doe"
+                  password:
+                    type: string
+                    example: "Password"
+        CreateUser:
+          description: "User data"
+          required: true
+          content:
+            application/json:
+              schema:
+                required:
+                  - firstName
+                  - lastName
+                  - email
+                properties:
+                  firstName:
+                    type: string
+                    example: "John"
+                  lastName:
+                    type: string
+                    example: "Doe"
+                  email:
+                    type: string
+                    example: "john.doe@example.com"
+
+      responses:
+        AuthToken:
+          description: "Returns the auth token"
+          content:
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDQ0OTg2MzYsImV4cCI6MTY0NzA5MDYzNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiU29jaWV0eSBPbmUifQ.SC6PGVeYmde45C-sCM0JDuCbA7Zcclzcc5RnK3ZguCFx16mZyQ-6HGgEumX4YNnaPUwbUsXsY4Liq7yAI-WoYqsYMTm1pLK5VhMNAVbTYRRdfDbeJ4WT6Mxxkjamg48GM_56pekNp0ewpcCdLaQesjzobta7BDxC4RC0mEAo2DXneaDtJUivXe_HFBNzGEdWC3mn9RpxnvxIMu_hmWDUpxhlDY3hweNvh0l7mk_QWRhgxm_lpI3FsE7OzS88iE0WaoACHgl5wkbG6euVA_RKBfluRnU0sRazLF_3kccSfpVOKqzX1JQ0Sp84ciRHO5_AMMEW_rgF3O5EygCQci1qVg"
+        InvalidCredentials:
+          description: "Invalid username and/or password"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: "Invalid credentials."
+        JWTTokenError:
+          description: "JWT Token Invalid - See schemas for possible messages"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - ref: "#/components/schemas/JWTTokenMissing"
+                  - ref: "#/components/schemas/JWTTokenExpired"
+                  - ref: "#/components/schemas/JWTTokenInvalid"
+                example:
+                  code: 401
+                  message: ""
+        ReadProduct:
+          description: "Returns the details of a product"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    ref: "#/components/schemas/Product"
+        ReadAllProduct:
+          description: "Returns a paginated list of products"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data: 
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items: 
+                          ref: "#/components/schemas/Product"
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          has_previous_page:
+                            type: bool
+                            example: false
+                          has_next_page:
+                            type: bool
+                            example: true
+                          per_page:
+                            type: integer
+                            example: 5
+                          total_items:
+                            type: integer
+                            example: 15
+                          total_pages:
+                            type: integer
+                            example: 3
+        ProductNotFound:
+          description: "No product found for the provided id"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "No product found for the provided id"
+        ReadUser:
+          description: "Returns the details of a user"
+          content: 
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    ref: "#/components/schemas/User"
+        ReadAllUser:
+          description: "Returns a paginated list of users"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data: 
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items: 
+                          ref: "#/components/schemas/User"
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          has_previous_page:
+                            type: bool
+                            example: false
+                          has_next_page:
+                            type: bool
+                            example: true
+                          per_page:
+                            type: integer
+                            example: 5
+                          total_items:
+                            type: integer
+                            example: 15
+                          total_pages:
+                            type: integer
+                            example: 3
+        CreateUser:
+          description: "User successfully created"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    ref: "#/components/schemas/User"
+        ReadUserForbidden:
+          description: "You are not allowed to view this user"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 403
+                  message:
+                    type: string
+                    example: "You are not allowed to view this user"
+        DeleteUserForbidden:
+          description: "You are not allowed to delete this user"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 403
+                  message:
+                    type: string
+                    example: "You are not allowed to delete this user"
+        UserNotFound:
+          description: "No user found for the provided id"
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "No user found for the provided id"
+
+    security:
+      - Bearer: []
+
+    paths:
+      /api/auth/login:
+        post:
+          tags: [Login]
+          summary: "Authenticate and receive a token"
+          requestBody:
+            ref: "#/components/requestBodies/UserCredentials"
+          responses:
+            200:
+              ref: "#/components/responses/AuthToken"
+            401:
+              ref: "#/components/responses/InvalidCredentials"
+
+      /api/products:
+        get:
+          tags: [Products]
+          summary: "Get all products"
+          parameters:
+            page:
+              ref: "#/components/parameters/PageNumber"
+          responses:
+            200:
+              ref: "#/components/responses/ReadAllProduct"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+
+      /api/products/{id}:
+        get:
+          tags: [Products]
+          summary: "Get a product details"
+          parameters:
+            product:
+              ref: "#/components/parameters/ProductId"
+          responses:
+            200:
+              ref: "#/components/responses/ReadProduct"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+            404:
+              ref: "#/components/responses/ProductNotFound"
+
+      /api/users:
+        get:
+          tags: [Users]
+          summary: "Get all users of the authenticated society"
+          parameters:
+            page:
+              ref: "#/components/parameters/PageNumber"
+          responses:
+            200:
+              ref: "#/components/responses/ReadAllUser"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+        post:
+          tags: [Users]
+          summary: "Create a new user associated with the authenticated society"
+          requestBody:
+            ref: "#/components/requestBodies/CreateUser"
+          responses:
+            201:
+              ref: "#/components/responses/CreateUser"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+
+      /api/users/{id}:
+        get:
+          tags: [Users]
+          summary: "Get a user details"
+          parameters:
+            user:
+              ref: "#/components/parameters/UserId"
+          responses:
+            200:
+              ref: "#/components/responses/ReadUser"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+            403:
+              ref: "#/components/responses/ReadUserForbidden"
+            404:
+              ref: "#/components/responses/UserNotFound"
+        delete:
+          tags: [Users]
+          summary: "Delete a user"
+          parameters:
+            user:
+              ref: "#/components/parameters/UserId"
+          responses:
+            204:
+              description: "User successfully deleted"
+            401:
+              ref: "#/components/responses/JWTTokenError"
+            403:
+              ref: "#/components/responses/DeleteUserForbidden"
+            404:
+              ref: "#/components/responses/UserNotFound"
+
+  areas: # to filter documented areas
+    # disable_default_routes: true
+    path_patterns:
+      - ^/api(?!/docs$) # Accepts routes under /api except /api/docs
