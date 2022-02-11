@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -12,19 +15,35 @@ class Product {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["full", "product"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["full", "product"])]
     private $name;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(["full", "product"])]
     private $price;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(["full", "product"])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["full", "product"])]
     private $color;
+
+    /**
+     * Hook timestampable behavior
+     * updates createdAt, updatedAt fields
+     */
+    use TimestampableEntity;
+
+    public function __construct() {
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
+    }
 
     public function getId(): ?int {
         return $this->id;
