@@ -5,12 +5,25 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[UniqueEntity(fields: "name")]
+/**
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = "expr('/api/products/' ~ object.getId())",
+ *     attributes = {
+ *         "method": "GET"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"product"}
+ *     )
+ * )
+ */
 class Product {
     #[ORM\Id]
     #[ORM\GeneratedValue]

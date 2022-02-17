@@ -6,12 +6,13 @@ use App\Entity\User;
 use App\Entity\Society;
 use App\Repository\UserRepository;
 use App\Security\Voter\SocietyVoter;
+use JMS\Serializer\SerializerInterface;
 use App\Service\ValidatorErrorFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -19,6 +20,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 #[Route('/api/users')]
 class UserController extends AbstractController {
     private const USER_PER_PAGE = 5;
+
+    public function __construct(private SerializerInterface $serializer) {}
 
     #[Route('', name: 'app_users_get', methods: ['GET'], format: 'json')]
     public function readAllUser(Request $request, UserRepository $userRepository): Response {
@@ -28,10 +31,12 @@ class UserController extends AbstractController {
         $page = (int) $request->query->get("page");
         $page = ($page > 0) ? $page : 1;
 
-        return $this->json([
-            'code' => 200, 
+        $response = [
+            'code' => 200,
             'data' => $userRepository->search($society, "asc", $page, self::USER_PER_PAGE)
-        ], 200, [], ['groups' => "user"]);
+        ];
+
+        return new Response($this->serializer->serialize($response, "json", SerializationContext::create()->setGroups(["user"])), 200);
     }
 
     #[Route('/{id}', name: 'app_user_get', methods: ['GET'], format: 'json')]
@@ -39,10 +44,12 @@ class UserController extends AbstractController {
     public function readUser(User $user): Response {
         $this->denyAccessUnlessGranted(SocietyVoter::USER_OWNERSHIP, $user, "You are not allowed to view this user");
 
-        return $this->json([
-            'code' => 200, 
+        $response = [
+            'code' => 200,
             'data' => $user
-        ], 200, [], ['groups' => "user"]);
+        ];
+
+        return new Response($this->serializer->serialize($response, "json", SerializationContext::create()->setGroups(["user"])), 200);
     }
 
     #[Route('', name: 'app_user_post', methods: ['POST'], format: 'json')]
@@ -67,10 +74,12 @@ class UserController extends AbstractController {
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json([
-            'code' => 201, 
+        $response = [
+            'code' => 201,
             'data' => $user
-        ], 201, [], ['groups' => "user"]);
+        ];
+
+        return new Response($this->serializer->serialize($response, "json", SerializationContext::create()->setGroups(["user"])), 201);
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['DELETE'], format: 'json')]
@@ -81,6 +90,6 @@ class UserController extends AbstractController {
         $entityManager->remove($user);
         $entityManager->flush();
 
-        return $this->json([], 204);
+        return new Response("", 204);
     }
 }

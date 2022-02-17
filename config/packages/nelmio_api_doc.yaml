@@ -32,6 +32,18 @@ nelmio_api_doc:
             color:
               type: string
               example: "White"
+            _links:
+              type: object
+              properties:
+                self:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/products/20"
+                    method:
+                      type: string
+                      example: "GET"
         User:
           type: object
           properties:
@@ -53,6 +65,27 @@ nelmio_api_doc:
                 name:
                   type: string
                   example: "BileMo"
+            _links:
+              type: object
+              properties:
+                self:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/users/10"
+                    method:
+                      type: string
+                      example: "GET"
+                delete:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/users/10"
+                    method:
+                      type: string
+                      example: "DELETE"
         JWTTokenMissing:
           type: object
           properties:
@@ -154,6 +187,19 @@ nelmio_api_doc:
                   token:
                     type: string
                     example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDQ0OTg2MzYsImV4cCI6MTY0NzA5MDYzNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiU29jaWV0eSBPbmUifQ.SC6PGVeYmde45C-sCM0JDuCbA7Zcclzcc5RnK3ZguCFx16mZyQ-6HGgEumX4YNnaPUwbUsXsY4Liq7yAI-WoYqsYMTm1pLK5VhMNAVbTYRRdfDbeJ4WT6Mxxkjamg48GM_56pekNp0ewpcCdLaQesjzobta7BDxC4RC0mEAo2DXneaDtJUivXe_HFBNzGEdWC3mn9RpxnvxIMu_hmWDUpxhlDY3hweNvh0l7mk_QWRhgxm_lpI3FsE7OzS88iE0WaoACHgl5wkbG6euVA_RKBfluRnU0sRazLF_3kccSfpVOKqzX1JQ0Sp84ciRHO5_AMMEW_rgF3O5EygCQci1qVg"
+        InvalidJSON:
+          description: "Invalid request - See request body schema"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Invalid JSON."
         InvalidCredentials:
           description: "Invalid username and/or password"
           content:
@@ -348,6 +394,8 @@ nelmio_api_doc:
           responses:
             200:
               ref: "#/components/responses/AuthToken"
+            400:
+              ref: "#/components/responses/InvalidJSON"
             401:
               ref: "#/components/responses/InvalidCredentials"
 
