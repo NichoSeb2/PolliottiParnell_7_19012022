@@ -2,16 +2,39 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use DateTime;
+use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: "email")]
+/**
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = "expr('/api/users/' ~ object.getId())",
+ *     attributes = {
+ *         "method": "GET"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"user"}
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "delete",
+ *     href = "expr('/api/users/' ~ object.getId())",
+ *     attributes = {
+ *         "method": "DELETE"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"user"}
+ *     )
+ * )
+ */
 class User {
     #[ORM\Id]
     #[ORM\GeneratedValue]

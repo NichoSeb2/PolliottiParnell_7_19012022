@@ -13,6 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
         "gedmo/doctrine-extensions": "^3.5",
+        "jms/serializer-bundle": "^4.0",
         "lexik/jwt-authentication-bundle": "^2.14",
         "nelmio/api-doc-bundle": "^4.8",
         "pagerfanta/doctrine-orm-adapter": "^3.5",
@@ -37,7 +38,8 @@
         "symfony/validator": "5.4.*",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "willdurand/hateoas-bundle": "^2.4"
     },
     "config": {
         "allow-plugins": {
