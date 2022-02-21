@@ -18,6 +18,7 @@ class ProductFixtures extends Fixture {
                 ->setColor(self::COLOR[array_rand(self::COLOR)])
                 ->setPrice(rand(99, 999) + (rand(0, 99)) / 100)
             ;
+
             $manager->persist($product);
             $manager->flush();
         }
