@@ -23,6 +23,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *         groups = {"product"}
  *     )
  * )
+ * @Hateoas\Relation(
+ *     "list",
+ *     href = "expr('/api/products')",
+ *     attributes = {
+ *         "method": "GET"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"product"}
+ *     )
+ * )
  */
 class Product {
     #[ORM\Id]

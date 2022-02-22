@@ -21,14 +21,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
             $user
                 ->setFirstName("FirstName ". $i)
                 ->setLastName("LastName ". $i)
-                ->setEmail("firstname.lastname@gmail.com")
+                ->setEmail("customer-$i@gmail.com")
             ;
 
-            if ($i % 2 == 0) {
-                $user->setSociety($this->getReference(SocietyFixtures::SOCIETY_ONE_REFERENCE));
-            } else {
-                $user->setSociety($this->getReference(SocietyFixtures::SOCIETY_TWO_REFERENCE));
-            }
+            $user->setSociety($this->getReference(SocietyFixtures::SOCIETY_DEMO_REFERENCE));
 
             $manager->persist($user);
             $manager->flush();

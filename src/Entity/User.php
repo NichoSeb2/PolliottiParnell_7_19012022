@@ -25,6 +25,26 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     )
  * )
  * @Hateoas\Relation(
+ *     "list",
+ *     href = "expr('/api/users')",
+ *     attributes = {
+ *         "method": "GET"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"user"}
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "create",
+ *     href = "expr('/api/users')",
+ *     attributes = {
+ *         "method": "POST"
+ *     },
+ *     exclusion = @Hateoas\Exclusion(
+ *         groups = {"user"}
+ *     )
+ * )
+ * @Hateoas\Relation(
  *     "delete",
  *     href = "expr('/api/users/' ~ object.getId())",
  *     attributes = {

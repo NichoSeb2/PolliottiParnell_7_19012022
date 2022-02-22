@@ -44,6 +44,15 @@ nelmio_api_doc:
                     method:
                       type: string
                       example: "GET"
+                list:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/products"
+                    method:
+                      type: string
+                      example: "GET"
         User:
           type: object
           properties:
@@ -77,6 +86,24 @@ nelmio_api_doc:
                     method:
                       type: string
                       example: "GET"
+                list:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/users"
+                    method:
+                      type: string
+                      example: "GET"
+                create:
+                  type: object
+                  properties:
+                    href:
+                      type: string
+                      example: "/api/users"
+                    method:
+                      type: string
+                      example: "POST"
                 delete:
                   type: object
                   properties:
