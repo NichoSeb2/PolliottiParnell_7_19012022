@@ -59,10 +59,10 @@ nelmio_api_doc:
             id:
               type: integer
               example: 10
-            firstName:
+            first_name:
               type: string
               example: "John"
-            lastName:
+            last_name:
               type: string
               example: "Doe"
             email:
@@ -190,14 +190,14 @@ nelmio_api_doc:
             application/json:
               schema:
                 required:
-                  - firstName
-                  - lastName
+                  - first_name
+                  - last_name
                   - email
                 properties:
-                  firstName:
+                  first_name:
                     type: string
                     example: "John"
-                  lastName:
+                  last_name:
                     type: string
                     example: "Doe"
                   email:

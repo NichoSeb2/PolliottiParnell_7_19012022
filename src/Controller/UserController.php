@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Serializer\SerializerInterface as SerializerInterfaceSymfony;
 
 #[Route('/api/users')]
 class UserController extends AbstractController {
@@ -53,7 +54,7 @@ class UserController extends AbstractController {
     }
 
     #[Route('', name: 'app_user_post', methods: ['POST'], format: 'json')]
-    public function createUser(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response {
+    public function createUser(Request $request, EntityManagerInterface $entityManager, SerializerInterfaceSymfony $serializer, ValidatorInterface $validator): Response {
         /** @var Society $society */
         $society = $this->getUser();
 

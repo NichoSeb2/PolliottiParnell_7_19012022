@@ -41,6 +41,12 @@
         "twig/twig": "^2.12|^3.0",
         "willdurand/hateoas-bundle": "^2.4"
     },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "symfony/maker-bundle": "^1.36",
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
+    },
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
@@ -89,11 +95,5 @@
             "require": "5.4.*",
             "docker": false
         }
-    },
-    "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "symfony/maker-bundle": "^1.36",
-        "symfony/stopwatch": "5.4.*",
-        "symfony/web-profiler-bundle": "5.4.*"
     }
 }
